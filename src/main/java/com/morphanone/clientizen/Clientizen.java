@@ -188,7 +188,7 @@ public class Clientizen extends Denizen2Implementation {
 
     @Override
     public boolean generalDebug() {
-        return true; // TODO: config
+        return Settings.debugGeneral();
     }
 
     @Override
@@ -213,6 +213,6 @@ public class Clientizen extends Denizen2Implementation {
 
     @Override
     public boolean enforceLocale() {
-        return true; // TODO: config
+        return Settings.enforceLocale();
     }
 }
