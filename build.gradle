@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "0.0.1"
+group = "com.morphanone.clientizen"
+archivesBaseName = "Clientizen"
+
+sourceCompatibility = targetCompatibility = "1.8"
+
+minecraft {
+    version = "1.10.2-12.18.2.2118"
+    runDir = "run"
+    mappings = "snapshot_20161103"
+    makeObfSourceJar = false
+
+    replaceIn "com/morphanone/clientizen/Clientizen.java"
+    replace "%MOD_VERSION%", project.version
+}
+
+repositories {
+    mavenCentral()
+    maven { url = "http://repo.citizensnpcs.co/" }
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    shade 'com.denizenscript:denizen2core:0.1.2'
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+}
+
+processResources {
+    inputs.property "modVersion", project.version
+    inputs.property "mcVersion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'modVersion': project.version,
+                'mcVersion': project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}

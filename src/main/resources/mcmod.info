@@ -1,0 +1,14 @@
+[{
+  "modid": "clientizen",
+  "name": "Clientizen",
+  "description": "Allows client-side scripting via Denizen2.",
+  "version": "${modVersion}",
+  "mcversion": "${mcVersion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Morphan1"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}]
