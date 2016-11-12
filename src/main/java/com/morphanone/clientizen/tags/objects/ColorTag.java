@@ -7,7 +7,6 @@ import com.denizenscript.denizen2core.tags.objects.TextTag;
 import com.denizenscript.denizen2core.utilities.Action;
 import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.Function2;
-import com.morphanone.clientizen.Clientizen;
 
 import java.awt.*;
 import java.lang.reflect.Field;
@@ -46,12 +45,10 @@ public class ColorTag extends AbstractTagObject {
             }
             String name = field.getName();
             if (!CoreUtilities.toUpperCase(name).equals(name)) {
-                Clientizen.instance.logger.info("Failed: " + name);
                 // Only get UPPER_CASE field names.
                 continue;
             }
             try {
-                Clientizen.instance.logger.info("Succeeded: " + name);
                 NAMED_COLORS.put(name, (Color) field.get(null));
             }
             catch (IllegalAccessException e) {

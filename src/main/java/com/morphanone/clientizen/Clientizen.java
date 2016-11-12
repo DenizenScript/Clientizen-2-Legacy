@@ -13,6 +13,7 @@ import com.morphanone.clientizen.forgecommands.ClientExCommand;
 import com.morphanone.clientizen.gui.OverlayGuiHandler;
 import com.morphanone.clientizen.network.ClientizenPluginChannel;
 import com.morphanone.clientizen.scripts.ServerScriptManager;
+import com.morphanone.clientizen.util.Schedulable;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -29,6 +30,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Mod(
         modid = Clientizen.MOD_ID,
@@ -67,6 +71,8 @@ public class Clientizen extends Denizen2Implementation {
 
     public OverlayGuiHandler overlayGuiHandler;
 
+    private final List<Schedulable> scheduledTasks = new ArrayList<>();
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         // Initial setup
@@ -80,6 +86,9 @@ public class Clientizen extends Denizen2Implementation {
         addonsFolder.mkdirs();
         imagesFolder = new File(configFolder, "images");
         imagesFolder.mkdirs();
+        // Load config (save default if it doesn't exist)
+        saveDefaultConfig();
+        loadConfig();
         // Network
         channel = new ClientizenPluginChannel();
         // GUI
@@ -87,9 +96,6 @@ public class Clientizen extends Denizen2Implementation {
         MinecraftForge.EVENT_BUS.register(overlayGuiHandler);
         // Set Denizen2 implementation
         Denizen2Core.init(this);
-        // Load config (save default if it doesn't exist)
-        saveDefaultConfig();
-        loadConfig();
         // Commands : Overlay GUI
         Denizen2Core.register(new OverlayImageCommand());
         Denizen2Core.register(new OverlayTextCommand());
@@ -104,14 +110,39 @@ public class Clientizen extends Denizen2Implementation {
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
-            Denizen2Core.tick(event.renderTickTime / 20);
+            double delta = event.renderTickTime / 20;
+            Denizen2Core.tick(delta);
+            Iterator<Schedulable> iter = scheduledTasks.iterator();
+            while (iter.hasNext()) {
+                Schedulable schedulable = iter.next();
+                if (schedulable.run(delta)) {
+                    iter.remove();
+                }
+            }
         }
     }
 
     @SubscribeEvent
-    public void onLeaveServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        Clientizen.instance.outputInfo("Left server!");
+    public void onConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+        Clientizen.instance.outputInfo("Connected to server!");
+        schedule(new Schedulable() {
+            @Override
+            public void run() {
+                Clientizen.instance.outputInfo("Sending READY!");
+                channel.sendReady();
+            }
+        }, 0.1);
+    }
+
+    @SubscribeEvent
+    public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        Clientizen.instance.outputInfo("Disconnected from server!");
         ServerScriptManager.clearScripts();
+    }
+
+    public void schedule(Schedulable schedulable, double delayInSeconds) {
+        schedulable.remainingDelay = delayInSeconds;
+        scheduledTasks.add(schedulable);
     }
 
     private void saveDefaultConfig() {

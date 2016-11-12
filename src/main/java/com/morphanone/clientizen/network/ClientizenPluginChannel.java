@@ -11,6 +11,7 @@ import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.debugging.ColorSet;
 import com.morphanone.clientizen.Clientizen;
 import com.morphanone.clientizen.scripts.ServerScriptManager;
+import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,15 @@ public class ClientizenPluginChannel extends AbstractPluginChannel {
             Map<String, String> definitions = deserializer.readStringMap();
             runScript(scriptName, definitions);
         }
+        else {
+            Clientizen.instance.outputInfo("Received unknown packet type: " + subchannel);
+        }
+    }
+
+    public void sendReady() {
+        DataSerializer serializer = new DataSerializer();
+        serializer.writeString("READY");
+        sendPacket(serializer);
     }
 
     private void loadAllScripts(Map<String, String> allScripts) {
