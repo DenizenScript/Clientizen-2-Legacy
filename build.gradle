@@ -16,9 +16,9 @@ archivesBaseName = "Clientizen"
 sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
-    version = "1.10.2-12.18.2.2118"
+    version = "1.11-13.19.0.2141"
     runDir = "run"
-    mappings = "snapshot_20161103"
+    mappings = "snapshot_20161111"
     makeObfSourceJar = false
 
     replaceIn "com/morphanone/clientizen/Clientizen.java"
