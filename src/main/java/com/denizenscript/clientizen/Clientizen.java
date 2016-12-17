@@ -1,6 +1,7 @@
 package com.denizenscript.clientizen;
 
 import com.denizenscript.clientizen.commands.gui.OverlayImageCommand;
+import com.denizenscript.clientizen.commands.local.ChatCommand;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
 import com.denizenscript.clientizen.scripts.ServerScriptManager;
 import com.denizenscript.denizen2core.Denizen2Core;
@@ -107,9 +108,11 @@ public class Clientizen extends Denizen2Implementation {
         MinecraftForge.EVENT_BUS.register(overlayGuiHandler);
         // Set Denizen2 implementation
         Denizen2Core.init(this);
-        // Commands : Overlay GUI
+        // Commands: GUI
         Denizen2Core.register(new OverlayImageCommand());
         Denizen2Core.register(new OverlayTextCommand());
+        // Commands: Local
+        Denizen2Core.register(new ChatCommand());
         // Load Denizen2
         Denizen2Core.start();
         // Client tick
