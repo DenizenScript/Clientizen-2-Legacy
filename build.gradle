@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "0.0.1"
-group = "com.morphanone.clientizen"
+group = "com.denizenscript.clientizen"
 archivesBaseName = "Clientizen"
 
 sourceCompatibility = targetCompatibility = "1.8"
@@ -21,7 +21,7 @@ minecraft {
     mappings = "snapshot_20161111"
     makeObfSourceJar = false
 
-    replaceIn "com/morphanone/clientizen/Clientizen.java"
+    replaceIn "com/denizenscript/clientizen/Clientizen.java"
     replace "%MOD_VERSION%", project.version
 }
 
