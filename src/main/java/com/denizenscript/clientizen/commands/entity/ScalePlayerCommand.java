@@ -3,10 +3,12 @@ package com.denizenscript.clientizen.commands.entity;
 import com.denizenscript.denizen2core.commands.AbstractCommand;
 import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
+import com.denizenscript.denizen2core.tags.AbstractTagObject;
 import com.denizenscript.denizen2core.tags.objects.NumberTag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -15,7 +17,7 @@ public class ScalePlayerCommand extends AbstractCommand {
 
     // <--[command]
     // @Name scaleplayer
-    // @Arguments <size>
+    // @Arguments <size>/<x-size>,<y-size>,<z-size>
     // @Short rescales the local player.
     // @Updated 2016/12/16
     // @Group Entity
@@ -52,20 +54,34 @@ public class ScalePlayerCommand extends AbstractCommand {
     @Override
     public void execute(CommandQueue queue, CommandEntry entry) {
         if (mainScs != null) {
-            Minecraft.getMinecraft().thePlayer.eyeHeight /= mainScs.size;
+            Minecraft.getMinecraft().thePlayer.eyeHeight /= mainScs.sizeY;
             mainScs.disable();
             mainScs = null;
         }
         ScalePlayerSystem scs = new ScalePlayerSystem();
-        scs.size = (float) NumberTag.getFor(queue.error, entry.getArgumentObject(queue, 0)).getInternal();
-        if (scs.size == 1.0f) {
+        AbstractTagObject ato =  entry.getArgumentObject(queue, 0);
+        String atostr = ato.toString();
+        // TODO: Vector/Location tag?
+        if (atostr.contains(",")) {
+            String[] split = atostr.split(",");
+            scs.sizeX = (float) NumberTag.getFor(queue.error, split[0]).getInternal();
+            scs.sizeY = (float) NumberTag.getFor(queue.error, split[1]).getInternal();
+            scs.sizeZ = (float) NumberTag.getFor(queue.error, split[2]).getInternal();
+        }
+        else {
+            float t = (float) NumberTag.getFor(queue.error, ato).getInternal();
+            scs.sizeX = t;
+            scs.sizeY = t;
+            scs.sizeZ = t;
+        }
+        if (scs.sizeY == 1.0f && scs.sizeX == 1.0f && scs.sizeZ == 1.0f) {
             if (queue.shouldShowGood()) {
                 queue.outGood("Ignoring a non-editing scaler!");
             }
             return;
         }
         scs.player = Minecraft.getMinecraft().thePlayer;
-        Minecraft.getMinecraft().thePlayer.eyeHeight *= scs.size;
+        Minecraft.getMinecraft().thePlayer.eyeHeight *= scs.sizeY;
         scs.register();
         mainScs = scs;
         if (queue.shouldShowGood()) {
@@ -77,7 +93,11 @@ public class ScalePlayerCommand extends AbstractCommand {
 
     public class ScalePlayerSystem {
 
-        public float size;
+        public float sizeX;
+
+        public float sizeY;
+
+        public float sizeZ;
 
         public EntityPlayer player;
 
@@ -90,12 +110,17 @@ public class ScalePlayerCommand extends AbstractCommand {
         }
 
         @SubscribeEvent
+        public void onCamera(EntityViewRenderEvent.CameraSetup event) {
+            GlStateManager.scale(1.0f / sizeY, 1.0f / sizeY, 1.0 / sizeY);
+        }
+
+        @SubscribeEvent
         public void renderEntityPre(RenderLivingEvent.Pre event) {
             if (!event.getEntity().getUniqueID().equals(player.getUniqueID())) {
                 return;
             }
             GlStateManager.pushMatrix();
-            GlStateManager.scale(size, size, size);
+            GlStateManager.scale(sizeX, sizeY, sizeZ);
         }
 
         @SubscribeEvent
