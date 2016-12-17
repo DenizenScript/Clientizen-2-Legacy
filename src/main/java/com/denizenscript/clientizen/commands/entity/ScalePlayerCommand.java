@@ -8,13 +8,16 @@ import com.denizenscript.denizen2core.utilities.debugging.Debug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ScalePlayerCommand extends AbstractCommand {
 
@@ -68,6 +71,7 @@ public class ScalePlayerCommand extends AbstractCommand {
             }
             return;
         }
+        scs.player = Minecraft.getMinecraft().thePlayer.getUniqueID();
         scs.register();
         mainScs = scs;
         if (queue.shouldShowGood()) {
@@ -81,6 +85,8 @@ public class ScalePlayerCommand extends AbstractCommand {
 
         public float size;
 
+        public UUID player;
+
         public void register() {
             MinecraftForge.EVENT_BUS.register(this);
         }
@@ -90,18 +96,20 @@ public class ScalePlayerCommand extends AbstractCommand {
         }
 
         @SubscribeEvent
-        public void renderEntityPre(RenderPlayerEvent.Pre event) {
-            for (ModelRenderer renderer : event.getRenderer().getMainModel().boxList) {
-                renderer.offsetX *= size;
-                renderer.offsetY *= size;
-                renderer.offsetZ *= size;
-                List<ModelBox> neo = new ArrayList<>();
-                for (ModelBox box : renderer.cubeList) {
-                    neo.add(new ModelBox(renderer, 0, 0, box.posX1 * size, box.posY1 * size, box.posZ1 * size,
-                            (int)((box.posZ2 - box.posX1) * size), (int)((box.posY2 - box.posY1) * size), (int)((box.posZ2 - box.posZ1) * size), 0));
-                }
-                renderer.cubeList = neo;
+        public void renderEntityPre(RenderLivingEvent.Pre event) {
+            if (!event.getEntity().getUniqueID().equals(player)) {
+                return;
             }
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(size, size, size);
+        }
+
+        @SubscribeEvent
+        public void renderEntityPre(RenderLivingEvent.Post event) {
+            if (!event.getEntity().getUniqueID().equals(player)) {
+                return;
+            }
+            GlStateManager.popMatrix();
         }
     }
 }
