@@ -25,7 +25,7 @@ public class ClientTagBase extends AbstractTagBase {
     public final static HashMap<String, Function2<TagData, AbstractTagObject, AbstractTagObject>> handlers = new HashMap<>();
 
     static {
-        // <--[tag]
+        // <--DISABLED:[tag]
         // @Name ClientTag.screen_width
         // @Updated 2016/11/10
         // @Group Utilities
