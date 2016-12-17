@@ -9,6 +9,7 @@ import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
 import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.ErrorInducedException;
+import com.denizenscript.denizen2core.utilities.debugging.Debug;
 import com.denizenscript.denizen2core.utilities.yaml.YAMLConfiguration;
 import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
@@ -168,6 +169,11 @@ public class Clientizen extends Denizen2Implementation {
     }
 
     @Override
+    public void preReload() {
+        // ...?
+    }
+
+    @Override
     public void reload() {
         Clientizen.instance.outputInfo("Reloading!");
         ServerScriptManager.injectScripts();
@@ -245,5 +251,28 @@ public class Clientizen extends Denizen2Implementation {
     @Override
     public boolean enforceLocale() {
         return Settings.enforceLocale();
+    }
+
+    @Override
+    public File getScriptDataFolder() {
+        return new File(configFolder, "data");
+    }
+
+    @Override
+    public boolean isSafePath(String file) {
+        // NOTE: No settings for allowing these!!! The server executor should not be allowed that!
+        // TODO: Potentially prevent paths with bad symbolism, EG backslashes or colons, which could be misintrepretted based on environment?
+        try {
+            File f = new File(getScriptDataFolder(), file);
+            String canPath = f.getCanonicalPath();
+            if (!canPath.startsWith(getScriptDataFolder().getCanonicalPath())) {
+                return false;
+            }
+            return true;
+        }
+        catch (Exception e) {
+            Debug.exception(e);
+            return false;
+        }
     }
 }
