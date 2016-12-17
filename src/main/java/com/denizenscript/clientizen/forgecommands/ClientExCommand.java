@@ -45,7 +45,6 @@ public class ClientExCommand extends CommandBase {
             argset.remove(0);
         }
         String cmd = CoreUtilities.concat(argset, " ");
-        // TODO: Redirect output to the commandSource!
         MapTag defs = new MapTag();
         Denizen2Core.runString(cmd, defs, quiet ? null : new SimpleCommandSender(sender));
     }

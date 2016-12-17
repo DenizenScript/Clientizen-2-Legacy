@@ -9,6 +9,7 @@ import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
 import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.ErrorInducedException;
+import com.denizenscript.denizen2core.utilities.debugging.ColorSet;
 import com.denizenscript.denizen2core.utilities.debugging.Debug;
 import com.denizenscript.denizen2core.utilities.yaml.YAMLConfiguration;
 import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
@@ -74,8 +75,15 @@ public class Clientizen extends Denizen2Implementation {
 
     private final List<Schedulable> scheduledTasks = new ArrayList<>();
 
+    public static char colorChar = '\u00A7';
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        // Colors
+        ColorSet.base = colorChar + "7";
+        ColorSet.good = colorChar + "a";
+        ColorSet.warning = colorChar + "c";
+        ColorSet.emphasis = colorChar + "b";
         // Initial setup
         logger = event.getModLog();
         configFolder = new File(event.getModConfigurationDirectory(), MOD_ID);
