@@ -2,6 +2,7 @@ package com.denizenscript.clientizen;
 
 import com.denizenscript.clientizen.commands.gui.OverlayImageCommand;
 import com.denizenscript.clientizen.commands.local.ChatCommand;
+import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
 import com.denizenscript.clientizen.scripts.ServerScriptManager;
 import com.denizenscript.denizen2core.Denizen2Core;
@@ -113,6 +114,7 @@ public class Clientizen extends Denizen2Implementation {
         Denizen2Core.register(new OverlayTextCommand());
         // Commands: Local
         Denizen2Core.register(new ChatCommand());
+        Denizen2Core.register(new ExecuteCommand());
         // Load Denizen2
         Denizen2Core.start();
         // Client tick
