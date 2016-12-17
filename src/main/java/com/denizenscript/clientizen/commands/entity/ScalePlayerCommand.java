@@ -4,20 +4,12 @@ import com.denizenscript.denizen2core.commands.AbstractCommand;
 import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
 import com.denizenscript.denizen2core.tags.objects.NumberTag;
-import com.denizenscript.denizen2core.utilities.debugging.Debug;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBox;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class ScalePlayerCommand extends AbstractCommand {
 
@@ -60,6 +52,7 @@ public class ScalePlayerCommand extends AbstractCommand {
     @Override
     public void execute(CommandQueue queue, CommandEntry entry) {
         if (mainScs != null) {
+            Minecraft.getMinecraft().thePlayer.eyeHeight /= mainScs.size;
             mainScs.disable();
             mainScs = null;
         }
@@ -71,7 +64,8 @@ public class ScalePlayerCommand extends AbstractCommand {
             }
             return;
         }
-        scs.player = Minecraft.getMinecraft().thePlayer.getUniqueID();
+        scs.player = Minecraft.getMinecraft().thePlayer;
+        Minecraft.getMinecraft().thePlayer.eyeHeight *= scs.size;
         scs.register();
         mainScs = scs;
         if (queue.shouldShowGood()) {
@@ -85,7 +79,7 @@ public class ScalePlayerCommand extends AbstractCommand {
 
         public float size;
 
-        public UUID player;
+        public EntityPlayer player;
 
         public void register() {
             MinecraftForge.EVENT_BUS.register(this);
@@ -97,7 +91,7 @@ public class ScalePlayerCommand extends AbstractCommand {
 
         @SubscribeEvent
         public void renderEntityPre(RenderLivingEvent.Pre event) {
-            if (!event.getEntity().getUniqueID().equals(player)) {
+            if (!event.getEntity().getUniqueID().equals(player.getUniqueID())) {
                 return;
             }
             GlStateManager.pushMatrix();
@@ -105,8 +99,8 @@ public class ScalePlayerCommand extends AbstractCommand {
         }
 
         @SubscribeEvent
-        public void renderEntityPre(RenderLivingEvent.Post event) {
-            if (!event.getEntity().getUniqueID().equals(player)) {
+        public void renderEntityPost(RenderLivingEvent.Post event) {
+            if (!event.getEntity().getUniqueID().equals(player.getUniqueID())) {
                 return;
             }
             GlStateManager.popMatrix();
