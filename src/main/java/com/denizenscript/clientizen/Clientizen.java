@@ -16,6 +16,8 @@ import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
 import com.denizenscript.clientizen.network.ClientizenPluginChannel;
 import com.denizenscript.clientizen.util.Schedulable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -133,11 +135,11 @@ public class Clientizen extends Denizen2Implementation {
 
     @SubscribeEvent
     public void onConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
-        Clientizen.instance.outputInfo("Connected to server!");
+        Clientizen.instance.outputToConsole("Connected to server!");
         schedule(new Schedulable() {
             @Override
             public void run() {
-                Clientizen.instance.outputInfo("Sending READY!");
+                Clientizen.instance.outputToConsole("Sending READY!");
                 channel.sendReady();
             }
         }, 0.1);
@@ -145,7 +147,7 @@ public class Clientizen extends Denizen2Implementation {
 
     @SubscribeEvent
     public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        Clientizen.instance.outputInfo("Disconnected from server!");
+        Clientizen.instance.outputToConsole("Disconnected from server!");
         ServerScriptManager.clearScripts();
     }
 
@@ -183,7 +185,7 @@ public class Clientizen extends Denizen2Implementation {
 
     @Override
     public void reload() {
-        Clientizen.instance.outputInfo("Reloading!");
+        Clientizen.instance.outputToConsole("Reloading!");
         ServerScriptManager.injectScripts();
     }
 
@@ -216,9 +218,13 @@ public class Clientizen extends Denizen2Implementation {
         logger.debug("+> [Good] " + s);
     }
 
+    public void outputToConsole(String s) {
+        logger.info("+> [Info] " + s);
+    }
+
     @Override
     public void outputInfo(String s) {
-        logger.info("+> [Info] " + s);
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString("+> [Info] " + s));
     }
 
     @Override
