@@ -1,11 +1,10 @@
 package com.denizenscript.clientizen;
 
-import com.denizenscript.clientizen.commands.entity.ScalePlayerCommand;
+import com.denizenscript.clientizen.commands.entity.ScaleEntityCommand;
 import com.denizenscript.clientizen.commands.gui.OverlayImageCommand;
 import com.denizenscript.clientizen.commands.local.ChatCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
-import com.denizenscript.clientizen.scripts.ServerScriptManager;
 import com.denizenscript.denizen2core.Denizen2Core;
 import com.denizenscript.denizen2core.Denizen2Implementation;
 import com.denizenscript.denizen2core.commands.CommandEntry;
@@ -37,9 +36,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Mod(
         modid = Clientizen.MOD_ID,
@@ -111,7 +108,7 @@ public class Clientizen extends Denizen2Implementation {
         // Set Denizen2 implementation
         Denizen2Core.init(this);
         // Commands: Entity
-        Denizen2Core.register(new ScalePlayerCommand());
+        Denizen2Core.register(new ScaleEntityCommand());
         // Commands: GUI
         Denizen2Core.register(new OverlayImageCommand());
         Denizen2Core.register(new OverlayTextCommand());
@@ -156,7 +153,7 @@ public class Clientizen extends Denizen2Implementation {
     @SubscribeEvent
     public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         Clientizen.instance.outputToConsole("Disconnected from server!");
-        ServerScriptManager.clearScripts();
+        remoteScripts.clear();
     }
 
     public void schedule(Schedulable schedulable, double delayInSeconds) {
@@ -191,10 +188,18 @@ public class Clientizen extends Denizen2Implementation {
         // ...?
     }
 
+    public HashMap<String, String> remoteScripts = new HashMap<>();
+
+    @Override
+    public void midLoad() {
+        for (Map.Entry<String, String> script : remoteScripts.entrySet()) {
+            Denizen2Core.loadFile("Server Sent: " + script.getKey(), script.getValue());
+        }
+    }
+
     @Override
     public void reload() {
-        Clientizen.instance.outputToConsole("Reloading!");
-        ServerScriptManager.injectScripts();
+        // ...?
     }
 
     @Override

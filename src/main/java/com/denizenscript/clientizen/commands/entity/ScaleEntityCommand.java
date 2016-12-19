@@ -13,32 +13,34 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ScalePlayerCommand extends AbstractCommand {
+import java.util.HashMap;
+import java.util.UUID;
+
+public class ScaleEntityCommand extends AbstractCommand {
 
     // <--[command]
-    // @Name scaleplayer
-    // @Arguments <size>/<x-size>,<y-size>,<z-size>
-    // @Short rescales the local player.
+    // @Name scaleentity
+    // @Arguments <size>/<x-size>,<y-size>,<z-size> [uuid]
+    // @Short rescales the local player, or a specified entity.
     // @Updated 2016/12/16
     // @Group Entity
     // @Minimum 1
     // @Maximum 1
-    // @Warning This command exists for experimental reasons only!
     // @Description
-    // Rescales the local player.
+    // Rescales the local player, or a specified entity.
     // @Example
-    // # This example scales the player to half size.
+    // # This example scales the local player to half size.
     // - scaleplayer 0.5
     // -->
 
     @Override
     public String getName() {
-        return "scaleplayer";
+        return "scaleentity";
     }
 
     @Override
     public String getArguments() {
-        return "<size>";
+        return "<size>/<x-size>,<y-size>,<z-size> [uuid]";
     }
 
     @Override
@@ -48,16 +50,11 @@ public class ScalePlayerCommand extends AbstractCommand {
 
     @Override
     public int getMaximumArguments() {
-        return 1;
+        return 2;
     }
 
     @Override
     public void execute(CommandQueue queue, CommandEntry entry) {
-        if (mainScs != null) {
-            Minecraft.getMinecraft().thePlayer.eyeHeight /= mainScs.sizeY;
-            mainScs.disable();
-            mainScs = null;
-        }
         ScalePlayerSystem scs = new ScalePlayerSystem();
         AbstractTagObject ato =  entry.getArgumentObject(queue, 0);
         String atostr = ato.toString();
@@ -74,22 +71,43 @@ public class ScalePlayerCommand extends AbstractCommand {
             scs.sizeY = t;
             scs.sizeZ = t;
         }
+        UUID uuid;
+        if (entry.arguments.size() > 1) {
+            uuid = UUID.fromString(entry.getArgumentObject(queue, 1).toString());
+        }
+        else {
+            uuid = Minecraft.getMinecraft().thePlayer.getUniqueID();
+        }
+        if (mainScs.containsKey(uuid)) {
+            ScalePlayerSystem tscs = mainScs.get(uuid);
+            if (tscs.player != null) {
+                tscs.player.eyeHeight /= tscs.sizeY;
+            }
+            tscs.disable();
+            mainScs.remove(uuid);
+        }
         if (scs.sizeY == 1.0f && scs.sizeX == 1.0f && scs.sizeZ == 1.0f) {
             if (queue.shouldShowGood()) {
-                queue.outGood("Ignoring a non-editing scaler!");
+                queue.outGood("Ignoring a non-editing scaler for: " + uuid);
             }
             return;
         }
-        scs.player = Minecraft.getMinecraft().thePlayer;
-        Minecraft.getMinecraft().thePlayer.eyeHeight *= scs.sizeY;
+        scs.affectOnly = uuid;
+        if (uuid.equals(Minecraft.getMinecraft().thePlayer.getUniqueID())) {
+            scs.player = Minecraft.getMinecraft().thePlayer;
+        }
+        if (scs.player != null) {
+            scs.player.eyeHeight *= scs.sizeY;
+            scs.eyeHeight = scs.player.eyeHeight;
+        }
         scs.register();
-        mainScs = scs;
+        mainScs.put(uuid, scs);
         if (queue.shouldShowGood()) {
-            queue.outGood("Registered a scaler!");
+            queue.outGood("Registered a scaler for: " + uuid);
         }
     }
 
-    public static ScalePlayerSystem mainScs;
+    public static HashMap<UUID, ScalePlayerSystem> mainScs = new HashMap<>();
 
     public class ScalePlayerSystem {
 
@@ -99,7 +117,11 @@ public class ScalePlayerCommand extends AbstractCommand {
 
         public float sizeZ;
 
+        public float eyeHeight;
+
         public EntityPlayer player;
+
+        public UUID affectOnly;
 
         public void register() {
             MinecraftForge.EVENT_BUS.register(this);
@@ -111,23 +133,28 @@ public class ScalePlayerCommand extends AbstractCommand {
 
         @SubscribeEvent
         public void onCamera(EntityViewRenderEvent.CameraSetup event) {
-            GlStateManager.scale(1.0f / sizeY, 1.0f / sizeY, 1.0 / sizeY);
+            if (player != null) {
+                GlStateManager.scale(1.0f / sizeY, 1.0f / sizeY, 1.0 / sizeY);
+                player.eyeHeight = eyeHeight;
+            }
         }
 
         @SubscribeEvent
         public void renderEntityPre(RenderLivingEvent.Pre event) {
-            if (!event.getEntity().getUniqueID().equals(player.getUniqueID())) {
+            if (!event.getEntity().getUniqueID().equals(affectOnly)) {
                 return;
             }
             GlStateManager.pushMatrix();
             GlStateManager.scale(sizeX, sizeY, sizeZ);
+            GlStateManager.pushMatrix();
         }
 
         @SubscribeEvent
         public void renderEntityPost(RenderLivingEvent.Post event) {
-            if (!event.getEntity().getUniqueID().equals(player.getUniqueID())) {
+            if (!event.getEntity().getUniqueID().equals(affectOnly)) {
                 return;
             }
+            GlStateManager.popMatrix();
             GlStateManager.popMatrix();
         }
     }

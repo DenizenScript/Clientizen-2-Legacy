@@ -1,7 +1,6 @@
 package com.denizenscript.clientizen.network;
 
 import com.denizenscript.clientizen.Clientizen;
-import com.denizenscript.clientizen.scripts.ServerScriptManager;
 import com.denizenscript.denizen2core.Denizen2Core;
 import com.denizenscript.denizen2core.commands.CommandQueue;
 import com.denizenscript.denizen2core.commands.CommandScriptSection;
@@ -36,6 +35,10 @@ public class ClientizenPluginChannel extends AbstractPluginChannel {
             Map<String, String> definitions = deserializer.readStringMap();
             runScript(scriptName, definitions);
         }
+        else if (subchannel.equals("RequestConfirmation")) {
+            Clientizen.instance.outputToConsole("Server spotted!");
+            sendReady();
+        }
         else {
             Clientizen.instance.outputToConsole("Received unknown packet type: " + subchannel);
         }
@@ -48,9 +51,10 @@ public class ClientizenPluginChannel extends AbstractPluginChannel {
     }
 
     private void loadAllScripts(Map<String, String> allScripts) {
-        ServerScriptManager.clearScripts();
+        Clientizen.instance.remoteScripts.clear();
         for (Map.Entry<String, String> scriptFile : allScripts.entrySet()) {
-            ServerScriptManager.addScript(scriptFile.getKey(), scriptFile.getValue());
+            Clientizen.instance.outputToConsole("Recognized script file: " + scriptFile.getKey());
+            Clientizen.instance.remoteScripts.put(scriptFile.getKey(), scriptFile.getValue());
         }
         Denizen2Core.reload();
     }
@@ -73,7 +77,7 @@ public class ClientizenPluginChannel extends AbstractPluginChannel {
         }
         Denizen2Core.getImplementation().outputGood("Running script: " + ColorSet.emphasis + script.title);
         CommandQueue nq = section.toQueue();
-        if (definitions.size() > 1) {
+        if (definitions.size() > 0) {
             Map<String, AbstractTagObject> defs = new HashMap<>();
             for (Map.Entry<String, String> entry : definitions.entrySet()) {
                 defs.put(entry.getKey(), new TextTag(entry.getValue()));
