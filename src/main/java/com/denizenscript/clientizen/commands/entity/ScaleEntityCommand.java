@@ -145,6 +145,9 @@ public class ScaleEntityCommand extends AbstractCommand {
                 return;
             }
             GlStateManager.pushMatrix();
+            if (player == null) {
+                GlStateManager.translate(-event.getX() * sizeX + event.getX(), -event.getY() * sizeY + event.getY(), -event.getZ() * sizeZ + event.getZ());
+            }
             GlStateManager.scale(sizeX, sizeY, sizeZ);
             GlStateManager.pushMatrix();
         }
