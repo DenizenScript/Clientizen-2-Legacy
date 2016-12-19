@@ -86,7 +86,7 @@ public class ScaleEntityCommand extends AbstractCommand {
             tscs.disable();
             mainScs.remove(uuid);
         }
-        if (scs.sizeY == 1.0f && scs.sizeX == 1.0f && scs.sizeZ == 1.0f) {
+        if (scs.sizeY == 1.0f && scs.sizeX == 1.0f && scs.sizeZ == 1.0f || scs.sizeX <= 0.0f || scs.sizeY <= 0.0f || scs.sizeZ <= 0.0f) {
             if (queue.shouldShowGood()) {
                 queue.outGood("Ignoring a non-editing scaler for: " + uuid);
             }
