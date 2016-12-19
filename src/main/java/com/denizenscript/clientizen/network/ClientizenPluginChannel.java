@@ -22,15 +22,12 @@ public class ClientizenPluginChannel extends AbstractPluginChannel {
 
     @Override
     public void receivePacket(DataDeserializer deserializer) {
-        Clientizen.instance.outputToConsole("Received packet!");
         String subchannel = deserializer.readString();
         if (subchannel.equals("LoadAllScripts")) {
-            Clientizen.instance.outputToConsole("It's a wild LoadAllScripts!");
             Map<String, String> allScripts = deserializer.readStringMap();
             loadAllScripts(allScripts);
         }
         else if (subchannel.equals("RunScript")) {
-            Clientizen.instance.outputToConsole("Running script!");
             String scriptName = deserializer.readString();
             Map<String, String> definitions = deserializer.readStringMap();
             runScript(scriptName, definitions);

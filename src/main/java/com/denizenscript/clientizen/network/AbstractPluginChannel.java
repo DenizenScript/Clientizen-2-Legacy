@@ -20,7 +20,6 @@ public abstract class AbstractPluginChannel {
 
     @SubscribeEvent
     public void onCustomPacket(ClientCustomPacketEvent event) {
-        Clientizen.instance.outputToConsole("Custom packet: " + event.getPacket().channel());
         if (event.getPacket().channel().equals(channelName)) {
             receivePacket(new DataDeserializer(event.getPacket().payload()));
         }

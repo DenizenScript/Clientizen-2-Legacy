@@ -154,6 +154,7 @@ public class Clientizen extends Denizen2Implementation {
     public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         Clientizen.instance.outputToConsole("Disconnected from server!");
         remoteScripts.clear();
+        ScaleEntityCommand.mainScs.clear();
     }
 
     public void schedule(Schedulable schedulable, double delayInSeconds) {
