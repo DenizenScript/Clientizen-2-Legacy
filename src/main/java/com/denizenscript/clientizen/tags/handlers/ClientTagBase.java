@@ -3,8 +3,10 @@ package com.denizenscript.clientizen.tags.handlers;
 import com.denizenscript.denizen2core.tags.AbstractTagBase;
 import com.denizenscript.denizen2core.tags.AbstractTagObject;
 import com.denizenscript.denizen2core.tags.TagData;
+import com.denizenscript.denizen2core.tags.objects.IntegerTag;
 import com.denizenscript.denizen2core.tags.objects.TextTag;
 import com.denizenscript.denizen2core.utilities.Function2;
+import net.minecraft.client.Minecraft;
 
 import java.util.HashMap;
 
@@ -25,14 +27,22 @@ public class ClientTagBase extends AbstractTagBase {
     public final static HashMap<String, Function2<TagData, AbstractTagObject, AbstractTagObject>> handlers = new HashMap<>();
 
     static {
-        // <--DISABLED:[tag]
-        // @Name ClientTag.screen_width
-        // @Updated 2016/11/10
+        // <--[tag]
+        // @Name ClientTag.display_width
+        // @Updated 2017/01/26
         // @Group Utilities
         // @ReturnType IntegerTag
-        // @Returns the width of the client's current screen.
+        // @Returns the width of the client's display.
         // -->
-        //handlers.put("screen_width", (dat, obj) -> new IntegerTag(Minecraft.getMinecraft().currentScreen.width));
+        handlers.put("display_width", (dat, obj) -> new IntegerTag(Minecraft.getMinecraft().displayWidth));
+        // <--[tag]
+        // @Name ClientTag.display_height
+        // @Updated 2017/01/26
+        // @Group Utilities
+        // @ReturnType IntegerTag
+        // @Returns the width of the client's height.
+        // -->
+        handlers.put("display_height", (dat, obj) -> new IntegerTag(Minecraft.getMinecraft().displayHeight));
     }
 
     @Override

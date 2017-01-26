@@ -10,6 +10,8 @@ import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
 import com.denizenscript.clientizen.network.ClientizenPluginChannel;
+import com.denizenscript.clientizen.tags.handlers.ClientTagBase;
+import com.denizenscript.clientizen.tags.handlers.ColorTagBase;
 import com.denizenscript.clientizen.util.Schedulable;
 import com.denizenscript.denizen2core.Denizen2Core;
 import com.denizenscript.denizen2core.Denizen2Implementation;
@@ -119,6 +121,9 @@ public class Clientizen extends Denizen2Implementation {
         // Commands: Local
         Denizen2Core.register(new ChatCommand());
         Denizen2Core.register(new ExecuteCommand());
+        // Tags
+        Denizen2Core.register(new ClientTagBase());
+        Denizen2Core.register(new ColorTagBase());
         // Load Denizen2
         Denizen2Core.start();
         // Client tick
