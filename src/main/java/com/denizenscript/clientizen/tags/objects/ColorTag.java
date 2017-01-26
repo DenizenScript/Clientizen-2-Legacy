@@ -60,7 +60,7 @@ public class ColorTag extends AbstractTagObject {
         // @Name ColorTag.red
         // @Updated 2016/11/04
         // @Group Identification
-        // @ReturnType TextTag
+        // @ReturnType IntegerTag
         // @Returns the red value of the color.
         // @Example "255,128,0" .red returns "255".
         // -->
@@ -70,9 +70,9 @@ public class ColorTag extends AbstractTagObject {
         // @Name ColorTag.green
         // @Updated 2016/11/04
         // @Group Identification
-        // @ReturnType TextTag
+        // @ReturnType IntegerTag
         // @Returns the green value of the color.
-        // @Example "255,128,0" .red returns "128".
+        // @Example "255,128,0" .green returns "128".
         // -->
         handlers.put("green", (dat, obj) -> new IntegerTag(((ColorTag) obj).internal.getGreen()));
 
@@ -80,9 +80,9 @@ public class ColorTag extends AbstractTagObject {
         // @Name ColorTag.blue
         // @Updated 2016/11/04
         // @Group Identification
-        // @ReturnType TextTag
+        // @ReturnType IntegerTag
         // @Returns the blue value of the color.
-        // @Example "255,128,0" .red returns "0".
+        // @Example "255,128,0" .blue returns "0".
         // -->
         handlers.put("blue", (dat, obj) -> new IntegerTag(((ColorTag) obj).internal.getBlue()));
     }
