@@ -4,7 +4,6 @@ import com.denizenscript.denizen2core.commands.AbstractCommand;
 import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentString;
 
 public class ExecuteCommand extends AbstractCommand {
 
@@ -45,6 +44,6 @@ public class ExecuteCommand extends AbstractCommand {
 
     @Override
     public void execute(CommandQueue queue, CommandEntry entry) {
-        Minecraft.getMinecraft().thePlayer.sendChatMessage(entry.getArgumentObject(queue, 0).toString());
+        Minecraft.getMinecraft().player.sendChatMessage(entry.getArgumentObject(queue, 0).toString());
     }
 }

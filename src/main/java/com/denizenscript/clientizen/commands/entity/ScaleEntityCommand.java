@@ -76,7 +76,7 @@ public class ScaleEntityCommand extends AbstractCommand {
             uuid = UUID.fromString(entry.getArgumentObject(queue, 1).toString());
         }
         else {
-            uuid = Minecraft.getMinecraft().thePlayer.getUniqueID();
+            uuid = Minecraft.getMinecraft().player.getUniqueID();
         }
         if (mainScs.containsKey(uuid)) {
             ScalePlayerSystem tscs = mainScs.get(uuid);
@@ -93,8 +93,8 @@ public class ScaleEntityCommand extends AbstractCommand {
             return;
         }
         scs.affectOnly = uuid;
-        if (uuid.equals(Minecraft.getMinecraft().thePlayer.getUniqueID())) {
-            scs.player = Minecraft.getMinecraft().thePlayer;
+        if (uuid.equals(Minecraft.getMinecraft().player.getUniqueID())) {
+            scs.player = Minecraft.getMinecraft().player;
         }
         if (scs.player != null) {
             scs.player.eyeHeight *= scs.sizeY;

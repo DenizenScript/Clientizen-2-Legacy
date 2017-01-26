@@ -17,17 +17,17 @@ import java.util.List;
 public class ClientExCommand extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "clientex";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "/cex dCommand";
     }
 
     @Override
-    public List<String> getCommandAliases() {
+    public List<String> getAliases() {
         return Collections.singletonList("cex");
     }
 

@@ -2,9 +2,13 @@ package com.denizenscript.clientizen;
 
 import com.denizenscript.clientizen.commands.entity.ScaleEntityCommand;
 import com.denizenscript.clientizen.commands.gui.OverlayImageCommand;
+import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
 import com.denizenscript.clientizen.commands.local.ChatCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
+import com.denizenscript.clientizen.gui.OverlayGuiHandler;
+import com.denizenscript.clientizen.network.ClientizenPluginChannel;
+import com.denizenscript.clientizen.util.Schedulable;
 import com.denizenscript.denizen2core.Denizen2Core;
 import com.denizenscript.denizen2core.Denizen2Implementation;
 import com.denizenscript.denizen2core.commands.CommandEntry;
@@ -14,10 +18,6 @@ import com.denizenscript.denizen2core.utilities.ErrorInducedException;
 import com.denizenscript.denizen2core.utilities.debugging.ColorSet;
 import com.denizenscript.denizen2core.utilities.debugging.Debug;
 import com.denizenscript.denizen2core.utilities.yaml.YAMLConfiguration;
-import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
-import com.denizenscript.clientizen.gui.OverlayGuiHandler;
-import com.denizenscript.clientizen.network.ClientizenPluginChannel;
-import com.denizenscript.clientizen.util.Schedulable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -36,7 +36,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Mod(
         modid = Clientizen.MOD_ID,
@@ -238,7 +242,7 @@ public class Clientizen extends Denizen2Implementation {
 
     @Override
     public void outputInfo(String s) {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString("+> [Info] " + s));
+        Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString("+> [Info] " + s));
     }
 
     @Override

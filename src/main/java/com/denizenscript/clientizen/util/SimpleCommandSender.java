@@ -14,6 +14,6 @@ public class SimpleCommandSender extends AbstractSender {
 
     @Override
     public void sendColoredMessage(String message) {
-        commandSender.addChatMessage(new TextComponentString(message));
+        commandSender.sendMessage(new TextComponentString(message));
     }
 }

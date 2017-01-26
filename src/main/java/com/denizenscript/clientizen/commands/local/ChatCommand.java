@@ -45,6 +45,6 @@ public class ChatCommand extends AbstractCommand {
 
     @Override
     public void execute(CommandQueue queue, CommandEntry entry) {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(entry.getArgumentObject(queue, 0).toString()));
+        Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentString(entry.getArgumentObject(queue, 0).toString()));
     }
 }
