@@ -9,7 +9,7 @@ public class OverlayText extends OverlayGui {
     public int rgbColor;
     public boolean shadow;
 
-    public OverlayText(int x, int y, String text, int rgbColor, boolean shadow) {
+    public OverlayText(float x, float y, String text, int rgbColor, boolean shadow) {
         super(x, y);
         this.text = text;
         this.rgbColor = rgbColor;
@@ -18,6 +18,6 @@ public class OverlayText extends OverlayGui {
 
     @Override
     public void render(Minecraft mc, ScaledResolution res) {
-        mc.fontRendererObj.drawString(text, x, y, rgbColor, shadow);
+        mc.fontRendererObj.drawString(text, x / res.getScaleFactor(), y / res.getScaleFactor(), rgbColor, shadow);
     }
 }

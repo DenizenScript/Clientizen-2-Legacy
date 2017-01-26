@@ -9,13 +9,13 @@ public class OverlayImage extends OverlayGui {
 
     public ResourceLocation image;
     public String imageName;
-    public int width;
-    public int height;
-    public int textureX;
-    public int textureY;
+    public float width;
+    public float height;
+    public float textureX;
+    public float textureY;
 
-    public OverlayImage(int x, int y, ResourceLocation image, String imageName,
-                        int width, int height, int textureX, int textureY) {
+    public OverlayImage(float x, float y, ResourceLocation image, String imageName,
+                        float width, float height, float textureX, float textureY) {
         super(x, y);
         this.image = image;
         this.imageName = imageName;
@@ -32,7 +32,9 @@ public class OverlayImage extends OverlayGui {
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
-        drawTexturedRect(x, y, width, height, textureX, textureY);
+        drawTexturedRect(x / res.getScaleFactor(), y / res.getScaleFactor(),
+                width / res.getScaleFactor(), height / res.getScaleFactor(),
+                textureX / res.getScaleFactor(), textureY / res.getScaleFactor());
         GlStateManager.popAttrib();
     }
 }

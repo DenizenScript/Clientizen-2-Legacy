@@ -8,15 +8,15 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public abstract class OverlayGui {
 
-    public int x;
-    public int y;
+    public float x;
+    public float y;
 
-    public OverlayGui(int x, int y) {
+    public OverlayGui(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    protected static void drawTexturedRect(int x, int y, int width, int height, int textureX, int textureY) {
+    protected static void drawTexturedRect(float x, float y, float width, float height, float textureX, float textureY) {
         float f = 1.0F / width;
         float f1 = 1.0F / height;
         Tessellator tessellator = Tessellator.getInstance();
