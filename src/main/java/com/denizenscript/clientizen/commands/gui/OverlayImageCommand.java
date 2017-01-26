@@ -1,22 +1,16 @@
 package com.denizenscript.clientizen.commands.gui;
 
+import com.denizenscript.clientizen.Clientizen;
+import com.denizenscript.clientizen.gui.OverlayGuiHandler;
+import com.denizenscript.clientizen.gui.overlay.OverlayGui;
 import com.denizenscript.clientizen.gui.overlay.OverlayImage;
 import com.denizenscript.denizen2core.commands.AbstractCommand;
 import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
 import com.denizenscript.denizen2core.tags.objects.IntegerTag;
 import com.denizenscript.denizen2core.tags.objects.TextTag;
-import com.denizenscript.clientizen.Clientizen;
-import com.denizenscript.clientizen.gui.OverlayGuiHandler;
-import com.denizenscript.clientizen.gui.overlay.OverlayGui;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import net.minecraft.util.ResourceLocation;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class OverlayImageCommand extends AbstractCommand {
 
@@ -30,12 +24,14 @@ public class OverlayImageCommand extends AbstractCommand {
     // @Maximum 9
     // @Description
     // Shows an image on the player's in-game overlay.
+    // The image must be loaded with the <@link command loadimage>LoadImage<@/link> command.
     // An ID is required for all actions in this command.
     // When using 'add', you must specify all arguments.
     // When using 'update', you may specify any number of arguments (still requires an ID).
     // When using 'remove', you should only specify the ID.
     // @Example
-    // TODO
+    // # This example displays a loaded image called MyImage at the top-left corner of the screen.
+    // - overlayimage add image1 0 0 25 25 0 0 MyImage
     // -->
 
     @Override
@@ -75,7 +71,8 @@ public class OverlayImageCommand extends AbstractCommand {
         IntegerTag heightTag = null;
         IntegerTag textureXTag = null;
         IntegerTag textureYTag = null;
-        String image = null;
+        ResourceLocation image = null;
+        String imageName = null;
         int size = entry.arguments.size();
         if (size > 2) {
             xTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 2));
@@ -90,7 +87,13 @@ public class OverlayImageCommand extends AbstractCommand {
                             if (size > 7) {
                                 textureYTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 7));
                                 if (size > 8) {
-                                    image = TextTag.getFor(queue.error, entry.getArgumentObject(queue, 8)).getInternal();
+                                    String imageId = TextTag.getFor(queue.error, entry.getArgumentObject(queue, 8)).getInternal();
+                                    if (!LoadImageCommand.isImageLoaded(imageId)) {
+                                        queue.handleError(entry, "There is no loaded image with the specified ID: " + imageId);
+                                        return;
+                                    }
+                                    image = LoadImageCommand.getLoadedImage(imageId);
+                                    imageName = CoreUtilities.toLowerCase(imageId);
                                 }
                             }
                         }
@@ -110,13 +113,7 @@ public class OverlayImageCommand extends AbstractCommand {
                     queue.handleError(entry, "Must specify all arguments when adding!");
                     return;
                 }
-                File addFile = new File(Clientizen.instance.imagesFolder, image);
-                if (!addFile.exists()) {
-                    queue.handleError(entry, "The specified file does not exist in this mod's '/images' folder!");
-                    return;
-                }
-                ResourceLocation addLoc = getResourceLocation(addFile);
-                overlay.add(id, new OverlayImage((int) xTag.getInternal(), (int) yTag.getInternal(), addLoc,
+                overlay.add(id, new OverlayImage((int) xTag.getInternal(), (int) yTag.getInternal(), image, imageName,
                         (int) widthTag.getInternal(), (int) heightTag.getInternal(),
                         (int) textureXTag.getInternal(), (int) textureYTag.getInternal()));
                 break;
@@ -150,12 +147,8 @@ public class OverlayImageCommand extends AbstractCommand {
                     overlayImage.textureY = (int) textureYTag.getInternal();
                 }
                 if (image != null) {
-                    File updateFile = new File(Clientizen.instance.imagesFolder, image);
-                    if (!updateFile.exists()) {
-                        queue.handleError(entry, "The specified file does not exist in this mod's '/images' folder!");
-                        return;
-                    }
-                    overlayImage.image = getResourceLocation(updateFile);
+                    overlayImage.image = image;
+                    overlayImage.imageName = imageName;
                 }
                 break;
             case REMOVE:
@@ -169,19 +162,6 @@ public class OverlayImageCommand extends AbstractCommand {
                 }
                 overlay.remove(id);
                 break;
-        }
-    }
-
-    private static ResourceLocation getResourceLocation(File file) {
-        try {
-            BufferedImage bufferedImage = ImageIO.read(file);
-            DynamicTexture texture = new DynamicTexture(bufferedImage);
-            String dynTextureName = Clientizen.MOD_ID + "_" + file.getName();
-            return Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation(dynTextureName, texture);
-        }
-        catch (IOException e) {
-            Clientizen.instance.outputException(e);
-            return null;
         }
     }
 

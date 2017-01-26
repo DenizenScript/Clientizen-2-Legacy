@@ -8,14 +8,17 @@ import net.minecraft.util.ResourceLocation;
 public class OverlayImage extends OverlayGui {
 
     public ResourceLocation image;
+    public String imageName;
     public int width;
     public int height;
     public int textureX;
     public int textureY;
 
-    public OverlayImage(int x, int y, ResourceLocation image, int width, int height, int textureX, int textureY) {
+    public OverlayImage(int x, int y, ResourceLocation image, String imageName,
+                        int width, int height, int textureX, int textureY) {
         super(x, y);
         this.image = image;
+        this.imageName = imageName;
         this.width = width;
         this.height = height;
         this.textureX = textureX;

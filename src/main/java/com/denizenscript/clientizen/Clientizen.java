@@ -1,8 +1,10 @@
 package com.denizenscript.clientizen;
 
 import com.denizenscript.clientizen.commands.entity.ScaleEntityCommand;
+import com.denizenscript.clientizen.commands.gui.LoadImageCommand;
 import com.denizenscript.clientizen.commands.gui.OverlayImageCommand;
 import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
+import com.denizenscript.clientizen.commands.gui.UnloadImageCommand;
 import com.denizenscript.clientizen.commands.local.ChatCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
@@ -36,11 +38,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mod(
         modid = Clientizen.MOD_ID,
@@ -114,8 +112,10 @@ public class Clientizen extends Denizen2Implementation {
         // Commands: Entity
         Denizen2Core.register(new ScaleEntityCommand());
         // Commands: GUI
+        Denizen2Core.register(new LoadImageCommand());
         Denizen2Core.register(new OverlayImageCommand());
         Denizen2Core.register(new OverlayTextCommand());
+        Denizen2Core.register(new UnloadImageCommand());
         // Commands: Local
         Denizen2Core.register(new ChatCommand());
         Denizen2Core.register(new ExecuteCommand());

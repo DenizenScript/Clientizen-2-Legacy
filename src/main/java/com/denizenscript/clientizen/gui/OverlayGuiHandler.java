@@ -1,12 +1,14 @@
 package com.denizenscript.clientizen.gui;
 
-import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.clientizen.gui.overlay.OverlayGui;
+import com.denizenscript.clientizen.gui.overlay.OverlayImage;
+import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class OverlayGuiHandler {
@@ -38,6 +40,18 @@ public class OverlayGuiHandler {
 
     public boolean contains(String id) {
         return guiById.containsKey(CoreUtilities.toLowerCase(id));
+    }
+
+    // TODO: find a better way to do this?
+    public void removeImages(String imageName) {
+        imageName = CoreUtilities.toLowerCase(imageName);
+        Iterator<Map.Entry<String, OverlayGui>> iter = guiById.entrySet().iterator();
+        while (iter.hasNext()) {
+            OverlayGui next = iter.next().getValue();
+            if (next instanceof OverlayImage && ((OverlayImage) next).imageName.equals(imageName)) {
+                iter.remove();
+            }
+        }
     }
 
     @SubscribeEvent
