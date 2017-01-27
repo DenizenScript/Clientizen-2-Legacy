@@ -16,7 +16,7 @@ public class OverlayImageCommand extends AbstractCommand {
 
     // <--[command]
     // @Name overlayimage
-    // @Arguments 'add'/'update'/'remove' <id> <x> <y> <width> <height> <textureX> <textureY> <image>
+    // @Arguments 'add'/'update'/'remove' <id> <image> <x> <y> <width> <height> <textureX> <textureY>
     // @Short shows an image on the player's in-game overlay.
     // @Updated 2017/01/27
     // @Group GUI
@@ -33,7 +33,7 @@ public class OverlayImageCommand extends AbstractCommand {
     // overlay image will automatically be removed.
     // @Example
     // # This example displays a loaded image called MyImage at the top-left corner of the screen.
-    // - overlayimage add image1 0 0 25 25 0 0 MyImage
+    // - overlayimage add image1 MyImage 0 0 25 25 0 0
     // @Example
     // # This example updates 'image1' to move further right and changes the displayed image.
     // - overlayimage update image1 -x 50 -image MyOtherImage
@@ -49,7 +49,7 @@ public class OverlayImageCommand extends AbstractCommand {
 
     @Override
     public String getArguments() {
-        return "'add'/'update'/'remove' <id> <x> <y> <width> <height> <textureX> <textureY> <image>";
+        return "'add'/'update'/'remove' <id> <image> <x> <y> <width> <height> <textureX> <textureY>";
     }
 
     @Override
@@ -84,19 +84,19 @@ public class OverlayImageCommand extends AbstractCommand {
                     queue.handleError(entry, "Must specify all arguments when adding!");
                     return;
                 }
-                String imageId = TextTag.getFor(queue.error, entry.getArgumentObject(queue, 8)).getInternal();
+                String imageId = TextTag.getFor(queue.error, entry.getArgumentObject(queue, 2)).getInternal();
                 if (!LoadImageCommand.isImageLoaded(imageId)) {
                     queue.handleError(entry, "There is no loaded image with the specified ID: " + imageId);
                     return;
                 }
                 ResourceLocation image = LoadImageCommand.getLoadedImage(imageId);
                 String imageName = CoreUtilities.toLowerCase(imageId);
-                IntegerTag xTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 2));
-                IntegerTag yTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 3));
-                IntegerTag widthTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 4));
-                IntegerTag heightTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 5));
-                IntegerTag textureXTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 6));
-                IntegerTag textureYTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 7));
+                IntegerTag xTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 3));
+                IntegerTag yTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 4));
+                IntegerTag widthTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 5));
+                IntegerTag heightTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 6));
+                IntegerTag textureXTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 7));
+                IntegerTag textureYTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 8));
                 overlay.add(id, new OverlayImage(xTag.getInternal(), yTag.getInternal(), image, imageName,
                         widthTag.getInternal(), heightTag.getInternal(),
                         textureXTag.getInternal(), textureYTag.getInternal()));
@@ -112,6 +112,15 @@ public class OverlayImageCommand extends AbstractCommand {
                     return;
                 }
                 OverlayImage overlayImage = (OverlayImage) gui;
+                if (entry.namedArgs.containsKey("image")) {
+                    String imgId = TextTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "image")).getInternal();
+                    if (!LoadImageCommand.isImageLoaded(imgId)) {
+                        queue.handleError(entry, "There is no loaded image with the specified ID: " + imgId);
+                        return;
+                    }
+                    overlayImage.image = LoadImageCommand.getLoadedImage(imgId);
+                    overlayImage.imageName = CoreUtilities.toLowerCase(imgId);
+                }
                 if (entry.namedArgs.containsKey("x")) {
                     overlayImage.x = IntegerTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "x")).getInternal();
                 }
@@ -129,15 +138,6 @@ public class OverlayImageCommand extends AbstractCommand {
                 }
                 if (entry.namedArgs.containsKey("textureY")) {
                     overlayImage.textureY = IntegerTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "textureY")).getInternal();
-                }
-                if (entry.namedArgs.containsKey("image")) {
-                    String imgId = TextTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "image")).getInternal();
-                    if (!LoadImageCommand.isImageLoaded(imgId)) {
-                        queue.handleError(entry, "There is no loaded image with the specified ID: " + imgId);
-                        return;
-                    }
-                    overlayImage.image = LoadImageCommand.getLoadedImage(imgId);
-                    overlayImage.imageName = CoreUtilities.toLowerCase(imgId);
                 }
                 break;
             case REMOVE:
