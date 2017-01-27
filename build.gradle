@@ -33,10 +33,12 @@ repositories {
 configurations {
     shade
     compile.extendsFrom shade
+    // Check for updates every build
+    resolutionStrategy.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 dependencies {
-    shade 'com.denizenscript:denizen2core:0.1.5'
+    shade('com.denizenscript:denizen2core:0.1.5') { changing = true }
 }
 
 jar {
