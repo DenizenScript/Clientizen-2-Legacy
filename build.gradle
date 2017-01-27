@@ -30,11 +30,14 @@ repositories {
     maven { url = "http://repo.citizensnpcs.co/" }
 }
 
+configurations.all {
+    // don't cache changing modules at all
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 configurations {
     shade
     compile.extendsFrom shade
-    // Check for updates every build
-    resolutionStrategy.resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
 
 dependencies {
