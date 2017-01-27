@@ -12,6 +12,7 @@ import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.debugging.ColorSet;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ClientizenPluginChannel extends AbstractPluginChannel {
@@ -23,21 +24,31 @@ public class ClientizenPluginChannel extends AbstractPluginChannel {
     @Override
     public void receivePacket(DataDeserializer deserializer) {
         String subchannel = deserializer.readString();
-        if (subchannel.equals("LoadAllScripts")) {
-            Map<String, String> allScripts = deserializer.readStringMap();
-            loadAllScripts(allScripts);
-        }
-        else if (subchannel.equals("RunScript")) {
-            String scriptName = deserializer.readString();
-            Map<String, String> definitions = deserializer.readStringMap();
-            runScript(scriptName, definitions);
-        }
-        else if (subchannel.equals("RequestConfirmation")) {
-            Clientizen.instance.outputToConsole("Server spotted!");
-            sendReady();
-        }
-        else {
-            Clientizen.instance.outputToConsole("Received unknown packet type: " + subchannel);
+        switch (subchannel) {
+            case "ClearAndLoadScripts":
+                Map<String, String> scripts = deserializer.readStringMap();
+                loadScripts(scripts, true);
+                break;
+            case "LoadScripts":
+                Map<String, String> newScripts = deserializer.readStringMap();
+                loadScripts(newScripts, false);
+                break;
+            case "RemoveScripts":
+                List<String> scriptNames = deserializer.readStringList();
+                unloadScripts(scriptNames);
+                break;
+            case "RunScript":
+                String scriptName = deserializer.readString();
+                Map<String, String> definitions = deserializer.readStringMap();
+                runScript(scriptName, definitions);
+                break;
+            case "RequestConfirmation":
+                Clientizen.instance.outputToConsole("Server spotted!");
+                sendReady();
+                break;
+            default:
+                Clientizen.instance.outputToConsole("Received unknown packet type: " + subchannel);
+                break;
         }
     }
 
@@ -47,11 +58,21 @@ public class ClientizenPluginChannel extends AbstractPluginChannel {
         sendPacket(serializer);
     }
 
-    private void loadAllScripts(Map<String, String> allScripts) {
-        Clientizen.instance.remoteScripts.clear();
-        for (Map.Entry<String, String> scriptFile : allScripts.entrySet()) {
-            Clientizen.instance.outputToConsole("Recognized script file: " + scriptFile.getKey());
+    private void loadScripts(Map<String, String> scripts, boolean clearExisting) {
+        if (clearExisting) {
+            Clientizen.instance.remoteScripts.clear();
+        }
+        for (Map.Entry<String, String> scriptFile : scripts.entrySet()) {
             Clientizen.instance.remoteScripts.put(scriptFile.getKey(), scriptFile.getValue());
+        }
+        Denizen2Core.reload();
+    }
+
+    private void unloadScripts(List<String> scriptNames) {
+        for (String script : scriptNames) {
+            if (Clientizen.instance.remoteScripts.containsKey(script)) {
+                Clientizen.instance.remoteScripts.remove(script);
+            }
         }
         Denizen2Core.reload();
     }
