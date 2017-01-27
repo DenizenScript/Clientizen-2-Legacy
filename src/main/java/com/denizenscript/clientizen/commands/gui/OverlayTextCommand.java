@@ -18,7 +18,7 @@ public class OverlayTextCommand extends AbstractCommand {
     // @Name overlaytext
     // @Arguments 'add'/'update'/'remove' <id> <text> <x> <y> <color> <shadow>
     // @Short shows text on the player's in-game overlay.
-    // @Updated 2016/11/04
+    // @Updated 2017/01/27
     // @Group GUI
     // @Minimum 2
     // @Maximum 7
@@ -26,11 +26,17 @@ public class OverlayTextCommand extends AbstractCommand {
     // Shows a string of text on the player's in-game overlay.
     // An ID is required for all actions in this command.
     // When using 'add', you must specify all arguments.
-    // When using 'update', you may specify any number of arguments (still requires an ID).
+    // When using 'update', you may specify any number of arguments (still requires the ID).
     // When using 'remove', you should only specify the ID.
     // @Example
     // # This adds simple red GUI text to the top-left of the screen.
     // - overlaytext add helloworld "Hello World!" 10 10 red false
+    // @Example
+    // # This updates 'helloworld' to be a different color and have weird casing.
+    // - overlaytext update helloworld -color blue -text "heLLo wORld!"
+    // @Example
+    // # This removes the 'helloworld' text from the screen.
+    // - overlaytext remove helloworld
     // -->
 
     @Override
@@ -64,27 +70,6 @@ public class OverlayTextCommand extends AbstractCommand {
             return;
         }
         String id = TextTag.getFor(queue.error, entry.getArgumentObject(queue, 1)).getInternal();
-        String text = null;
-        IntegerTag xTag = null;
-        IntegerTag yTag = null;
-        ColorTag colorTag = null;
-        BooleanTag shadowTag = null;
-        int size = entry.arguments.size();
-        if (size > 2) {
-            text = TextTag.getFor(queue.error, entry.getArgumentObject(queue, 2)).getInternal();
-            if (size > 3) {
-                xTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 3));
-                if (size > 4) {
-                    yTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 4));
-                    if (size > 5) {
-                        colorTag = ColorTag.getFor(queue.error, entry.getArgumentObject(queue, 5));
-                        if (size > 6) {
-                            shadowTag = BooleanTag.getFor(queue.error, entry.getArgumentObject(queue, 6));
-                        }
-                    }
-                }
-            }
-        }
         OverlayGuiHandler overlay = Clientizen.instance.overlayGuiHandler;
         switch (action) {
             case ADD:
@@ -92,11 +77,16 @@ public class OverlayTextCommand extends AbstractCommand {
                     queue.handleError(entry, "A GUI element with the ID '" + id + "' is already showing!");
                     return;
                 }
-                if (text == null || xTag == null || yTag == null || colorTag == null || shadowTag == null) {
+                if (entry.arguments.size() < 7) {
                     queue.handleError(entry, "Must specify all arguments when adding!");
                     return;
                 }
-                overlay.add(id, new OverlayText((int) xTag.getInternal(), (int) yTag.getInternal(), text,
+                TextTag textTag = TextTag.getFor(queue.error, entry.getArgumentObject(queue, 2));
+                IntegerTag xTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 3));
+                IntegerTag yTag = IntegerTag.getFor(queue.error, entry.getArgumentObject(queue, 4));
+                ColorTag colorTag = ColorTag.getFor(queue.error, entry.getArgumentObject(queue, 5));
+                BooleanTag shadowTag = BooleanTag.getFor(queue.error, entry.getArgumentObject(queue, 6));
+                overlay.add(id, new OverlayText((int) xTag.getInternal(), (int) yTag.getInternal(), textTag.getInternal(),
                         colorTag.getInternal().getRGB(), shadowTag.getInternal()));
                 break;
             case UPDATE:
@@ -110,20 +100,20 @@ public class OverlayTextCommand extends AbstractCommand {
                     return;
                 }
                 OverlayText overlayText = (OverlayText) gui;
-                if (text != null) {
-                    overlayText.text = text;
+                if (entry.namedArgs.containsKey("text")) {
+                    overlayText.text = TextTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "text")).getInternal();
                 }
-                if (xTag != null) {
-                    overlayText.x = (int) xTag.getInternal();
+                if (entry.namedArgs.containsKey("x")) {
+                    overlayText.x = IntegerTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "x")).getInternal();
                 }
-                if (yTag != null) {
-                    overlayText.y = (int) yTag.getInternal();
+                if (entry.namedArgs.containsKey("y")) {
+                    overlayText.y = IntegerTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "y")).getInternal();
                 }
-                if (colorTag != null) {
-                    overlayText.rgbColor = colorTag.getInternal().getRGB();
+                if (entry.namedArgs.containsKey("color")) {
+                    overlayText.rgbColor = ColorTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "color")).getInternal().getRGB();
                 }
-                if (shadowTag != null) {
-                    overlayText.shadow = shadowTag.getInternal();
+                if (entry.namedArgs.containsKey("shadow")) {
+                    overlayText.shadow = BooleanTag.getFor(queue.error, entry.getNamedArgumentObject(queue, "shadow")).getInternal();
                 }
                 break;
             case REMOVE:
