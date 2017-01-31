@@ -7,11 +7,13 @@ import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
 import com.denizenscript.clientizen.commands.gui.UnloadImageCommand;
 import com.denizenscript.clientizen.commands.local.ChatCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
+import com.denizenscript.clientizen.commands.world.PlayEffectCommand;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
 import com.denizenscript.clientizen.network.ClientizenPluginChannel;
 import com.denizenscript.clientizen.tags.handlers.ClientTagBase;
 import com.denizenscript.clientizen.tags.handlers.ColorTagBase;
+import com.denizenscript.clientizen.tags.handlers.PositionTagBase;
 import com.denizenscript.clientizen.util.Schedulable;
 import com.denizenscript.denizen2core.Denizen2Core;
 import com.denizenscript.denizen2core.Denizen2Implementation;
@@ -121,9 +123,12 @@ public class Clientizen extends Denizen2Implementation {
         // Commands: Local
         Denizen2Core.register(new ChatCommand());
         Denizen2Core.register(new ExecuteCommand());
+        // Commands: World
+        Denizen2Core.register(new PlayEffectCommand());
         // Tags
         Denizen2Core.register(new ClientTagBase());
         Denizen2Core.register(new ColorTagBase());
+        Denizen2Core.register(new PositionTagBase());
         // Load Denizen2
         Denizen2Core.start();
         // Client tick

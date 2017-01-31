@@ -2,15 +2,15 @@ package com.denizenscript.clientizen.commands.gui;
 
 import com.denizenscript.clientizen.Clientizen;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
+import com.denizenscript.clientizen.gui.overlay.OverlayGui;
 import com.denizenscript.clientizen.gui.overlay.OverlayText;
+import com.denizenscript.clientizen.tags.objects.ColorTag;
 import com.denizenscript.denizen2core.commands.AbstractCommand;
 import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
 import com.denizenscript.denizen2core.tags.objects.BooleanTag;
 import com.denizenscript.denizen2core.tags.objects.IntegerTag;
 import com.denizenscript.denizen2core.tags.objects.TextTag;
-import com.denizenscript.clientizen.gui.overlay.OverlayGui;
-import com.denizenscript.clientizen.tags.objects.ColorTag;
 
 public class OverlayTextCommand extends AbstractCommand {
 

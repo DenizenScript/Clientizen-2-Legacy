@@ -1,5 +1,6 @@
 package com.denizenscript.clientizen.tags.handlers;
 
+import com.denizenscript.clientizen.tags.objects.PositionTag;
 import com.denizenscript.denizen2core.tags.AbstractTagBase;
 import com.denizenscript.denizen2core.tags.AbstractTagObject;
 import com.denizenscript.denizen2core.tags.TagData;
@@ -43,6 +44,14 @@ public class ClientTagBase extends AbstractTagBase {
         // @Returns the width of the client's height.
         // -->
         handlers.put("display_height", (dat, obj) -> new IntegerTag(Minecraft.getMinecraft().displayHeight));
+        // <--[tag]
+        // @Name ClientTag.position
+        // @Updated 2017/01/30
+        // @Group General Information
+        // @ReturnType PositionTag
+        // @Returns the position the client is currently spawned at (0,0,0 when not in a world).
+        // -->
+        handlers.put("position", (dat, obj) -> new PositionTag(Minecraft.getMinecraft().player.getPositionVector()));
     }
 
     @Override
