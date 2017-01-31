@@ -30,7 +30,7 @@ public class ScaleEntityCommand extends AbstractCommand {
     // Rescales the local player, or a specified entity.
     // @Example
     // # This example scales the local player to half size.
-    // - scaleplayer 0.5
+    // - scaleentity 0.5
     // -->
 
     @Override
