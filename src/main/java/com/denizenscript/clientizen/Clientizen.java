@@ -8,6 +8,7 @@ import com.denizenscript.clientizen.commands.gui.UnloadImageCommand;
 import com.denizenscript.clientizen.commands.local.ChatCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.commands.world.PlayEffectCommand;
+import com.denizenscript.clientizen.events.client.ClientRightClicksBlockScriptEvent;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
 import com.denizenscript.clientizen.network.ClientizenPluginChannel;
@@ -125,6 +126,8 @@ public class Clientizen extends Denizen2Implementation {
         Denizen2Core.register(new ExecuteCommand());
         // Commands: World
         Denizen2Core.register(new PlayEffectCommand());
+        // Events: Client
+        Denizen2Core.register(new ClientRightClicksBlockScriptEvent());
         // Tags
         Denizen2Core.register(new ClientTagBase());
         Denizen2Core.register(new ColorTagBase());
