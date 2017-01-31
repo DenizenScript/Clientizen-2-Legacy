@@ -8,6 +8,7 @@ import com.denizenscript.denizen2core.tags.objects.TextTag;
 import com.denizenscript.denizen2core.utilities.Action;
 import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.Function2;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
@@ -52,7 +53,7 @@ public class PositionTag extends AbstractTagObject {
     static {
         // <--[tag]
         // @Name PositionTag.x
-        // @Updated 2016/08/26
+        // @Updated 2017/01/30
         // @Group Identification
         // @ReturnType NumberTag
         // @Returns the X coordinate of the position.
@@ -61,7 +62,7 @@ public class PositionTag extends AbstractTagObject {
         handlers.put("x", (dat, obj) -> new NumberTag(((PositionTag) obj).internal.x));
         // <--[tag]
         // @Name PositionTag.y
-        // @Updated 2016/08/26
+        // @Updated 2017/01/30
         // @Group Identification
         // @ReturnType NumberTag
         // @Returns the Y coordinate of the position.
@@ -70,7 +71,7 @@ public class PositionTag extends AbstractTagObject {
         handlers.put("y", (dat, obj) -> new NumberTag(((PositionTag) obj).internal.y));
         // <--[tag]
         // @Name PositionTag.z
-        // @Updated 2016/08/26
+        // @Updated 2017/01/30
         // @Group Identification
         // @ReturnType NumberTag
         // @Returns the Z coordinate of the position.
@@ -79,7 +80,7 @@ public class PositionTag extends AbstractTagObject {
         handlers.put("z", (dat, obj) -> new NumberTag(((PositionTag) obj).internal.z));
         // <--[tag]
         // @Name PositionTag.add[<PositionTag>]
-        // @Updated 2016/11/24
+        // @Updated 2017/01/30
         // @Group Mathematics
         // @ReturnType PositionTag
         // @Returns the position with the specified position vector added to it.
@@ -89,6 +90,15 @@ public class PositionTag extends AbstractTagObject {
             UtilPosition a = PositionTag.getFor(dat.error, dat.getNextModifier()).getInternal();
             return new PositionTag(t.x + a.x, t.y + a.y, t.z + a.z);
         });
+        // <--[tag]
+        // @Name PositionTag.block_type
+        // @Updated 2017/01/31
+        // @Group General Information
+        // @ReturnType BlockTypeTag
+        // @Returns the type of the block at the position.
+        // -->
+        handlers.put("block_type", (dat, obj) -> new BlockTypeTag(Minecraft.getMinecraft().world
+                .getBlockState(((PositionTag) obj).internal.toBlockPos()).getBlock()));
     }
 
     public static PositionTag getFor(Action<String> error, String text) {

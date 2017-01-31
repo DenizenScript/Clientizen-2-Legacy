@@ -8,12 +8,15 @@ import com.denizenscript.clientizen.commands.gui.UnloadImageCommand;
 import com.denizenscript.clientizen.commands.local.ChatCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.commands.world.PlayEffectCommand;
+import com.denizenscript.clientizen.commands.world.ToggleDoorCommand;
 import com.denizenscript.clientizen.events.client.ClientRightClicksBlockScriptEvent;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
 import com.denizenscript.clientizen.network.ClientizenPluginChannel;
+import com.denizenscript.clientizen.tags.handlers.BlockTypeTagBase;
 import com.denizenscript.clientizen.tags.handlers.ClientTagBase;
 import com.denizenscript.clientizen.tags.handlers.ColorTagBase;
+import com.denizenscript.clientizen.tags.handlers.ItemTypeTagBase;
 import com.denizenscript.clientizen.tags.handlers.PositionTagBase;
 import com.denizenscript.clientizen.util.Schedulable;
 import com.denizenscript.denizen2core.Denizen2Core;
@@ -126,11 +129,14 @@ public class Clientizen extends Denizen2Implementation {
         Denizen2Core.register(new ExecuteCommand());
         // Commands: World
         Denizen2Core.register(new PlayEffectCommand());
+        Denizen2Core.register(new ToggleDoorCommand());
         // Events: Client
         Denizen2Core.register(new ClientRightClicksBlockScriptEvent());
         // Tags
+        Denizen2Core.register(new BlockTypeTagBase());
         Denizen2Core.register(new ClientTagBase());
         Denizen2Core.register(new ColorTagBase());
+        Denizen2Core.register(new ItemTypeTagBase());
         Denizen2Core.register(new PositionTagBase());
         // Load Denizen2
         Denizen2Core.start();
