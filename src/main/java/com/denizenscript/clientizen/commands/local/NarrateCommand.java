@@ -6,26 +6,27 @@ import com.denizenscript.denizen2core.commands.CommandQueue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 
-public class ChatCommand extends AbstractCommand {
+public class NarrateCommand extends AbstractCommand {
 
     // <--[command]
-    // @Name chat
+    // @Name narrate
     // @Arguments <message>
-    // @Short shows a message on the client chat.
-    // @Updated 2016/12/16
+    // @Short shows a message in the client chat box.
+    // @Updated 2017/02/01
     // @Group Local
     // @Minimum 1
     // @Maximum 1
     // @Description
-    // Shows a message on the client chat.
+    // Shows a message inside the client chat box as if it were a typical
+    // system message.
     // @Example
-    // # This example shows the message 'hello'.
-    // - chat "Hello"
+    // # This example shows the message 'Hello'.
+    // - narrate "Hello"
     // -->
 
     @Override
     public String getName() {
-        return "chat";
+        return "narrate";
     }
 
     @Override
