@@ -9,6 +9,8 @@ Discuss on our forums at [http://forum.denizenscript.com/](http://forum.denizens
 
 Discuss in a live IRC chat room at [http://one.denizenscript.com/ircchat_denizen](http://one.denizenscript.com/ircchat_denizen).
 
+Download latest builds at [http://ci.citizensnpcs.co/job/Clientizen/](http://ci.citizensnpcs.co/job/Clientizen/).
+
 ### Licensing pre-note:
 
 This is an open source project, provided entirely freely, for everyone to use and contribute to.
