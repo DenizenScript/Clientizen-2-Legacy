@@ -5,7 +5,7 @@ import com.denizenscript.clientizen.commands.gui.LoadImageCommand;
 import com.denizenscript.clientizen.commands.gui.OverlayImageCommand;
 import com.denizenscript.clientizen.commands.gui.OverlayTextCommand;
 import com.denizenscript.clientizen.commands.gui.UnloadImageCommand;
-import com.denizenscript.clientizen.commands.local.ChatCommand;
+import com.denizenscript.clientizen.commands.local.NarrateCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.commands.world.PlayEffectCommand;
 import com.denizenscript.clientizen.commands.world.ToggleDoorCommand;
@@ -125,7 +125,7 @@ public class Clientizen extends Denizen2Implementation {
         Denizen2Core.register(new OverlayTextCommand());
         Denizen2Core.register(new UnloadImageCommand());
         // Commands: Local
-        Denizen2Core.register(new ChatCommand());
+        Denizen2Core.register(new NarrateCommand());
         Denizen2Core.register(new ExecuteCommand());
         // Commands: World
         Denizen2Core.register(new PlayEffectCommand());
