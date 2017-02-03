@@ -9,6 +9,7 @@ import com.denizenscript.clientizen.commands.local.NarrateCommand;
 import com.denizenscript.clientizen.commands.local.ExecuteCommand;
 import com.denizenscript.clientizen.commands.world.PlayEffectCommand;
 import com.denizenscript.clientizen.commands.world.ToggleDoorCommand;
+import com.denizenscript.clientizen.events.client.ClientPressesKeyScriptEvent;
 import com.denizenscript.clientizen.events.client.ClientRightClicksBlockScriptEvent;
 import com.denizenscript.clientizen.forgecommands.ClientExCommand;
 import com.denizenscript.clientizen.gui.OverlayGuiHandler;
@@ -131,6 +132,7 @@ public class Clientizen extends Denizen2Implementation {
         Denizen2Core.register(new PlayEffectCommand());
         Denizen2Core.register(new ToggleDoorCommand());
         // Events: Client
+        Denizen2Core.register(new ClientPressesKeyScriptEvent());
         Denizen2Core.register(new ClientRightClicksBlockScriptEvent());
         // Tags
         Denizen2Core.register(new BlockTypeTagBase());
