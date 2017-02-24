@@ -42,7 +42,6 @@ public class OverlayGuiHandler {
         return guiById.containsKey(CoreUtilities.toLowerCase(id));
     }
 
-    // TODO: find a better way to do this?
     public void removeImages(String imageName) {
         imageName = CoreUtilities.toLowerCase(imageName);
         Iterator<Map.Entry<String, OverlayGui>> iter = guiById.entrySet().iterator();

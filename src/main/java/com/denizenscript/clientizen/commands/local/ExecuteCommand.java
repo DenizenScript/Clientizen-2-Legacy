@@ -18,8 +18,11 @@ public class ExecuteCommand extends AbstractCommand {
     // @Description
     // Executes a command as the local client.
     // @Example
-    // # This example chats the message 'hello'.
+    // # This example chats the message 'Hello'.
     // - execute "Hello"
+    // @Example
+    // # This executes the command 'help'.
+    // - execute "/help"
     // -->
 
     @Override

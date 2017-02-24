@@ -3,11 +3,14 @@ package com.denizenscript.clientizen.tags.objects;
 import com.denizenscript.clientizen.util.UtilPosition;
 import com.denizenscript.denizen2core.tags.AbstractTagObject;
 import com.denizenscript.denizen2core.tags.TagData;
+import com.denizenscript.denizen2core.tags.objects.NullTag;
 import com.denizenscript.denizen2core.tags.objects.NumberTag;
 import com.denizenscript.denizen2core.tags.objects.TextTag;
 import com.denizenscript.denizen2core.utilities.Action;
 import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.Function2;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -99,6 +102,36 @@ public class PositionTag extends AbstractTagObject {
         // -->
         handlers.put("block_type", (dat, obj) -> new BlockTypeTag(Minecraft.getMinecraft().world
                 .getBlockState(((PositionTag) obj).internal.toBlockPos()).getBlock()));
+        // <--[tag]
+        // @Name PositionTag.door_hinge
+        // @Updated 2017/02/01
+        // @Group General Information
+        // @ReturnType TextTag
+        // @Returns the side of the door hinge (either 'left' or 'right').
+        // -->
+        handlers.put("door_hinge", (dat, obj) -> {
+            IBlockState state = Minecraft.getMinecraft().world.getBlockState(((PositionTag) obj).getInternal().toBlockPos());
+            if (!(state.getBlock() instanceof BlockDoor)) {
+                dat.error.run("Block at position is not a door!");
+                return new NullTag();
+            }
+            return new TextTag(state.getValue(BlockDoor.HINGE).getName());
+        });
+        // <--[tag]
+        // @Name PositionTag.door_facing
+        // @Updated 2017/02/01
+        // @Group General Information
+        // @ReturnType TextTag
+        // @Returns the direction the door is facing ('north', 'south', 'west', or 'east').
+        // -->
+        handlers.put("door_facing", (dat, obj) -> {
+            IBlockState state = Minecraft.getMinecraft().world.getBlockState(((PositionTag) obj).getInternal().toBlockPos());
+            if (!(state.getBlock() instanceof BlockDoor)) {
+                dat.error.run("Block at position is not a door!");
+                return new NullTag();
+            }
+            return new TextTag(state.getValue(BlockDoor.FACING).getName());
+        });
     }
 
     public static PositionTag getFor(Action<String> error, String text) {

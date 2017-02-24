@@ -69,7 +69,7 @@ public class BlockTypeTag extends AbstractTagObject {
         String domain = hasDomain ? split.get(0) : "";
         String path = hasDomain ? split.get(1) : split.get(0);
         for (ResourceLocation location : Block.REGISTRY.getKeys()) {
-            if ((hasDomain && location.getResourceDomain().equals(domain)) && location.getResourcePath().equals(path)) {
+            if ((!hasDomain || location.getResourceDomain().equals(domain)) && location.getResourcePath().equals(path)) {
                 return new BlockTypeTag(Block.REGISTRY.getObject(location));
             }
         }
