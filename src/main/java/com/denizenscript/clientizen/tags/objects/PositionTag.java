@@ -38,7 +38,7 @@ public class PositionTag extends AbstractTagObject {
     }
 
     public PositionTag(Vec3d position) {
-        this(position.xCoord, position.yCoord, position.zCoord);
+        this(position.x, position.y, position.z);
     }
 
     public PositionTag(double x, double y, double z) {
@@ -154,6 +154,11 @@ public class PositionTag extends AbstractTagObject {
     @Override
     public AbstractTagObject handleElseCase(TagData data) {
         return new TextTag(toString());
+    }
+
+    @Override
+    public String getTagTypeName() {
+        return "PositionTag";
     }
 
     @Override

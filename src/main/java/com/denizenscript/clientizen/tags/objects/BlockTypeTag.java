@@ -92,6 +92,11 @@ public class BlockTypeTag extends AbstractTagObject {
     }
 
     @Override
+    public String getTagTypeName() {
+        return "BlockTypeTag";
+    }
+
+    @Override
     public String toString() {
         return internal.getRegistryName().toString();
     }

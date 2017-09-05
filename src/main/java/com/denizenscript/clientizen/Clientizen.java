@@ -20,11 +20,16 @@ import com.denizenscript.clientizen.tags.handlers.ClientTagBase;
 import com.denizenscript.clientizen.tags.handlers.ColorTagBase;
 import com.denizenscript.clientizen.tags.handlers.ItemTypeTagBase;
 import com.denizenscript.clientizen.tags.handlers.PositionTagBase;
+import com.denizenscript.clientizen.tags.objects.BlockTypeTag;
+import com.denizenscript.clientizen.tags.objects.ColorTag;
+import com.denizenscript.clientizen.tags.objects.ItemTypeTag;
+import com.denizenscript.clientizen.tags.objects.PositionTag;
 import com.denizenscript.clientizen.util.Schedulable;
 import com.denizenscript.denizen2core.Denizen2Core;
 import com.denizenscript.denizen2core.Denizen2Implementation;
 import com.denizenscript.denizen2core.commands.CommandEntry;
 import com.denizenscript.denizen2core.commands.CommandQueue;
+import com.denizenscript.denizen2core.tags.handlers.SystemTagBase;
 import com.denizenscript.denizen2core.utilities.CoreUtilities;
 import com.denizenscript.denizen2core.utilities.ErrorInducedException;
 import com.denizenscript.denizen2core.utilities.debugging.ColorSet;
@@ -142,6 +147,12 @@ public class Clientizen extends Denizen2Implementation {
         Denizen2Core.register(new ColorTagBase());
         Denizen2Core.register(new ItemTypeTagBase());
         Denizen2Core.register(new PositionTagBase());
+        // Tag Objects
+        Denizen2Core.customSaveLoaders.put("BlockTypeTag", BlockTypeTag::getFor);
+        Denizen2Core.customSaveLoaders.put("ColorTag", ColorTag::getFor);
+        Denizen2Core.customSaveLoaders.put("ItemTypeTag", ItemTypeTag::getFor);
+        Denizen2Core.customSaveLoaders.put("PositionTag", PositionTag::getFor);
+        Denizen2Core.customSaveLoaders.put("ClientTag", (e, s) -> new SystemTagBase.SystemTag());
         // Load Denizen2
         Denizen2Core.start();
         // Client tick

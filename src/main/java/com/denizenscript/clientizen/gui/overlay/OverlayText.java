@@ -18,6 +18,6 @@ public class OverlayText extends OverlayGui {
 
     @Override
     public void render(Minecraft mc, ScaledResolution res) {
-        mc.fontRendererObj.drawString(text, x / res.getScaleFactor(), y / res.getScaleFactor(), rgbColor, shadow);
+        mc.fontRenderer.drawString(text, x / res.getScaleFactor(), y / res.getScaleFactor(), rgbColor, shadow);
     }
 }

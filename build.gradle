@@ -4,21 +4,21 @@ buildscript {
         maven { url = "http://files.minecraftforge.net/maven" }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.1.5"
+version = "0.2.0"
 group = "com.denizenscript.clientizen"
 archivesBaseName = "Clientizen"
 
 sourceCompatibility = targetCompatibility = "1.8"
 
 minecraft {
-    version = "1.11.2-13.20.0.2226"
+    version = "1.12.1-14.22.0.2469"
     runDir = "run"
-    mappings = "snapshot_20161220"
+    mappings = 'snapshot_nodoc_20170624'
     makeObfSourceJar = false
 
     replaceIn "com/denizenscript/clientizen/Clientizen.java"
@@ -41,7 +41,7 @@ configurations {
 }
 
 dependencies {
-    shade('com.denizenscript:denizen2core:0.1.5') { changing = true }
+    shade('com.denizenscript:denizen2core:0.2.0') { changing = true }
 }
 
 jar {

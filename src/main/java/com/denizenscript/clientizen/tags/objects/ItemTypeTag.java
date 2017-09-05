@@ -92,6 +92,11 @@ public class ItemTypeTag extends AbstractTagObject {
     }
 
     @Override
+    public String getTagTypeName() {
+        return "ItemTypeTag";
+    }
+
+    @Override
     public String toString() {
         return internal.getRegistryName().toString();
     }

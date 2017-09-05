@@ -126,6 +126,11 @@ public class ColorTag extends AbstractTagObject {
     }
 
     @Override
+    public String getTagTypeName() {
+        return "ColorTag";
+    }
+
+    @Override
     public String toString() {
         return internal.getRed() + "," + internal.getGreen() + "," + internal.getBlue();
     }

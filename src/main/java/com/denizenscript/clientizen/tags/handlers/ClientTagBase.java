@@ -80,6 +80,11 @@ public class ClientTagBase extends AbstractTagBase {
     public class ClientTag extends AbstractTagObject {
 
         @Override
+        public String getTagTypeName() {
+            return "ClientTag";
+        }
+
+        @Override
         public HashMap<String, Function2<TagData, AbstractTagObject, AbstractTagObject>> getHandlers() {
             return handlers;
         }

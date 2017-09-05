@@ -2,8 +2,8 @@ package com.denizenscript.clientizen.gui.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public abstract class OverlayGui {
@@ -20,7 +20,7 @@ public abstract class OverlayGui {
         float f = 1.0F / width;
         float f1 = 1.0F / height;
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
         vertexbuffer.pos(x, y + height, 0).tex(textureX * f, textureY + height * f1).endVertex();
         vertexbuffer.pos(x + width, y + height, 0).tex(textureX + width * f, textureY + height * f1).endVertex();
